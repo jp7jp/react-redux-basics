@@ -9,7 +9,13 @@ class App extends Component {
   }
 
   render() {
-    console.log(this.props.vehicles);
+
+    if (!this.props.vehicles.length) {
+      return (
+        <div>Loading...</div>
+      );
+    }
+
     return (
       <div>
         <h1>React Redux Basics</h1>

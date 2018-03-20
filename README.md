@@ -88,7 +88,7 @@ const store = createStore(reducers)
 
 ReactDOM.render(
   <Provider store={store}>
-  <App />
+    <App />
   </Provider>,
   document.getElementById('root')
 );
@@ -272,4 +272,102 @@ const mapStateToProps = (state) => {
 }
 
 export default connect(mapStateToProps, { getAllVehicles })(App);
+```
+
+### Retrieve data from API
+
+##### Add Axios and Redux-Thunk
+
+```bash
+yarn add axios redux-thunk
+yarn start
+```
+
+##### Prepare component to handle async requests
+
+```bash
+subl ./src/App.js
+```
+
+```js
+...
+
+class App extends Component {
+
+  ...
+
+  render() {
+
+    if (!this.props.vehicles.length) {
+      return (
+        <div>Loading...</div>
+      );
+    }
+
+    return (
+      <div>
+        <h1>React Redux Basics</h1>
+        <ul>
+          {this.props.vehicles.map((vehicle) => (
+            <li key={vehicle.model.name}>
+              {vehicle.model.name}
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+}
+
+...
+```
+
+##### Create API request inside the action (and remove static vehicles list)
+
+```bash
+subl ./src/actions/index.js
+```
+
+```js
+import axios from 'axios';
+
+export const getAllVehicles = () => {
+  return (dispatch) {
+    axios.get('https://api-cdn.gruposinal.com.br/public/cars/search?brand=grupo-sinal&paginate=eyJvZmZzZXQiOjB9')
+      .then((response) => {
+        dispatch({
+          type: 'GET_ALL_VEHICLES',
+          payload: response.data.cars          
+        })
+      })
+  }
+}
+```
+
+##### Apply Redux-Thunk Middleware
+
+```bash
+subl ./src/index.js
+```
+
+```js
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import { createStore, applyMiddleware } from 'redux';
+import ReduxThunk from 'redux-thunk';
+import reducers from './reducers';
+import './index.css';
+import App from './App';
+import registerServiceWorker from './registerServiceWorker';
+
+const store = createStore(reducers, applyMiddleware(ReduxThunk));
+
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('root')
+);
+registerServiceWorker();
 ```
