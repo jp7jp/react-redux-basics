@@ -21,7 +21,7 @@ class App extends Component {
         <h1>React Redux Basics</h1>
         <ul>
           {this.props.vehicles.map((vehicle) => (
-            <li key={vehicle.model.name}>
+            <li key={vehicle._id}>
               {vehicle.model.name}
             </li>
           ))}
