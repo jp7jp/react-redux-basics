@@ -1,6 +1,6 @@
 export default () => {
   return {
-    vehicles: [
+    all: [
       {
         _id: 1,
         model: { name: 'Fiat Punto from Reducer' }
