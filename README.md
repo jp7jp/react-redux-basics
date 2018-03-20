@@ -118,10 +118,10 @@ subl ./src/reducers/vehicles-reducer.js
 ```js
 export default () => {
   return {
-    vehicles: [
+    all: [
       {
         _id: 1,
-        model: { name: 'Fiat Punto' }
+        model: { name: 'Fiat Punto from Reducer' }
       },
       {
         _id: 2,
@@ -148,25 +148,6 @@ import { connect } from 'react-redux';
 
 class App extends Component {
 
-  /*
-  state = {
-    vehicles: [
-      {
-        _id: 1,
-        model: { name: 'Fiat Punto' }
-      },
-      {
-        _id: 2,
-        model: { name: 'Honda HR-V' }
-      },
-      {
-        _id: 3,
-        model: { name: 'Hyundai HB20' }
-      }
-    ]
-  }
-  */
-
   render() {
     return (
       <div>
@@ -190,4 +171,105 @@ const mapStateToProps = (state) => {
 }
 
 export default connect(mapStateToProps)(App);
+```
+
+### Retrieve data from Action
+
+##### Create action and move static data from reducer to action
+
+```bash
+mkdir ./src/actions
+subl ./src/actions/index.js
+```
+
+```js
+const vehicles = {
+  all: [
+    {
+      _id: 1,
+      model: { name: 'Fiat Punto from Action' }
+    },
+    {
+      _id: 2,
+      model: { name: 'Honda HR-V' }
+    },
+    {
+      _id: 3,
+      model: { name: 'Hyundai HB20' }
+    }
+  ]
+}
+
+export const getAllVehicles = () => {
+  return {
+    type: 'GET_ALL_VEHICLES',
+    payload: vehicles.all
+  }
+}
+```
+
+##### Prepare reducer to receive action
+
+```bash
+subl ./src/reducers/vehicles-reducer.js
+```
+
+```js
+const INITIAL_STATE = {
+  all: []
+}
+
+export default (state = INITIAL_STATE, action) => {
+  switch(action.type) {
+    case 'GET_ALL_VEHICLES':
+      return {
+        ...state,
+        all: action.payload
+      }
+    default:
+      return state;
+  }
+}
+```
+
+##### Call action from the App component
+
+```bash
+subl ./src/App.js
+```
+
+```js
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { getAllVehicles } from './actions';
+
+class App extends Component {
+
+  componentWillMount() {
+    this.props.getAllVehicles();
+  }
+
+  render() {
+    return (
+      <div>
+        <h1>React Redux Basics</h1>
+        <ul>
+          {this.props.vehicles.map((vehicle) => (
+            <li key={vehicle.model.name}>
+              {vehicle.model.name}
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+}
+
+const mapStateToProps = (state) => {
+  return {
+    vehicles: state.vehicles.all
+  }
+}
+
+export default connect(mapStateToProps, { getAllVehicles })(App);
 ```

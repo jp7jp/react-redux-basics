@@ -1,28 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { getAllVehicles } from './actions';
 
 class App extends Component {
 
-  /*
-  state = {
-    vehicles: [
-      {
-        _id: 1,
-        model: { name: 'Fiat Punto' }
-      },
-      {
-        _id: 2,
-        model: { name: 'Honda HR-V' }
-      },
-      {
-        _id: 3,
-        model: { name: 'Hyundai HB20' }
-      }
-    ]
+  componentWillMount() {
+    this.props.getAllVehicles();
   }
-  */
 
   render() {
+    console.log(this.props.vehicles);
     return (
       <div>
         <h1>React Redux Basics</h1>
@@ -44,4 +31,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps)(App);
+export default connect(mapStateToProps, { getAllVehicles })(App);
